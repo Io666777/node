@@ -20,5 +20,6 @@ app.use('/', (req, res, next) => {
 app.use('/users', userRouter);
 app.use('/abiturients', abiRouter);
 app.use('/teachers', tRouter);
+app.use('/exams', eRouter);
 
 export default app;

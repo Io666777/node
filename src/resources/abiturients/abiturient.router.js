@@ -23,14 +23,16 @@ router
     res.json(abi);
   })
   .put(async (req, res) => {
-    const update = await abiService.update(req.params.id, res.body);
+    const update = await abiService.update(req.params.id, req.body);
     res.json(update);
   })
   .delete(async (req, res) => {
-    const remove = await abiService.remove(req.params.id);
+    await abiService.remove(req.params.id);
+    res.sendStatus(204);
   });
 
 router.route('/:id:exams').get(async (req, res) => {
   const exams = await abiService.getAbiturientExams(req.params.id);
+  res.json(exams);
 });
 export default router;

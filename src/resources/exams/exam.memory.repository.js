@@ -30,20 +30,30 @@ const getByTeacherId = async (id) => EXAMS.filter((exam) => exam.teacherId === i
 const getByAbiturientId = async (id) => EXAMS.filter((exam) => exam.abiturientId === id);
 
 const removeTeacher = async (teacherId) => {
-  EXAMS.forEach((exam) => {
+  EXAMS.forEach((exam, index) => {
     if (exam.teacherId === teacherId) {
-      exam.teacherId = null;
+      EXAMS[index] = { ...exam, teacherId: null };
     }
   });
   return true;
 };
 const removeAbiturient = async (abiturientId) => {
-  EXAMS.forEach((exam) => {
+  EXAMS.forEach((exam, index) => {
     if (exam.abiturientId === abiturientId) {
-      exam.abiturientId = null;
+      EXAMS[index] = { ...exam, abiturientId: null };
     }
   });
   return true;
 };
 
-export { getAll, getById, create, update, remove, removeTeacher, removeAbiturient };
+export {
+  getAll,
+  getById,
+  create,
+  update,
+  remove,
+  removeTeacher,
+  removeAbiturient,
+  getByTeacherId,
+  getByAbiturientId,
+};
