@@ -1,6 +1,9 @@
 import express from 'express';
 
 import userRouter from './resources/users/user.router.js';
+import abiRouter from './resources/abiturients/abiturient.router.js';
+import tRouter from './resources/teachers/teacher.router.js';
+import eRouter from './resources/exams/exam.router.js';
 
 const app = express();
 
@@ -15,5 +18,7 @@ app.use('/', (req, res, next) => {
 });
 
 app.use('/users', userRouter);
+app.use('/abiturients', abiRouter);
+app.use('/teachers', tRouter);
 
 export default app;
