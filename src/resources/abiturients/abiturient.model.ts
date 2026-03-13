@@ -1,5 +1,5 @@
-export interface Abiturient{
-    id: number
+export interface Abiturient {
+    id: string
     lastName:string
     firstName:string
     numCertificate: number

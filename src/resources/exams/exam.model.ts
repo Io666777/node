@@ -1,9 +1,9 @@
-export interface Exam{
-    id: number
-    abiturientId:number | null;
-    teacherId:number | null;
+export interface Exam {
+    id: string
+    abiturientId:string | null;
+    teacherId:string | null;
     subject: string
-    date:number
+    date:string
     score:number
 }
 

@@ -1,22 +1,26 @@
-import * as teachersRepo from './teacher.memory.repository.js';
-import * as examsService from '../exams/exam.service.js';
-import Teacher from './teacher.model.js';
-import Exam from 'resources/exams/exam.model.js';
+import * as teachersRepo from './teacher.memory.repository.ts';
+import * as examsService from '../exams/exam.service.ts';
+import { Teacher } from './teacher.model';
+import { Exam } from '../exams/exam.model';
 
-const getAll = ():Promise<Teacher[]> => teachersRepo.getAll();
-const getById = (id:number):Promise<Teacher | undefined> => teachersRepo.getById(id);
-const create = (teacher: Teacher):Promise<Teacher> => teachersRepo.create(teacher);
-const update = (id:number, data:Partial<Teacher>):Promise<Teacher | null> => teachersRepo.update(id, data);
+const getAll = (): Promise<Teacher[]> => teachersRepo.getAll();
 
-const remove = async (id: number):Promise<Teacher | null> => {
-  const delTea = await teachersRepo.remove(id);
-  if (delTea) {
+const getById = (id: string): Promise<Teacher | undefined> => teachersRepo.getById(id);
+
+const create = (teacher: Teacher): Promise<Teacher> => teachersRepo.create(teacher);
+
+const update = (id: string, data: Partial<Teacher>): Promise<Teacher | null> => 
+  teachersRepo.update(id, data);
+
+const remove = async (id: string): Promise<Teacher | null> => {
+  const deletedTeacher = await teachersRepo.remove(id);
+  if (deletedTeacher) {
     await examsService.removeTeacher(id);
   }
-  return delTea;
+  return deletedTeacher;
 };
 
-
-const getTeacherExams = async (id:number):Promise<Exam[] | null> => examsService.getByTeacherId(id);
+const getTeacherExams = async (id: string): Promise<Exam[]> => 
+  examsService.getByTeacherId(id);
 
 export { getAll, getById, create, update, remove, getTeacherExams };

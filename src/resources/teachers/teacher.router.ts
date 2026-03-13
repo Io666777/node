@@ -1,46 +1,50 @@
 import { Router, Request, Response } from 'express';
 import * as tService from './teacher.service';
 
-import Teacher from './teacher.model';
-
 const router = Router();
 
 router
   .route('/')
-  .get(async (_req: Request, res:Response) => {
-    const t = await tService.getAll();
-    res.json(t);
+  .get(async (_req: Request, res: Response) => {
+    const teachers = await tService.getAll();
+    res.json(teachers);
   })
-  .post(async (req: Request, res:Response) => {
-    const newT = await tService.create(req.body);
-    res.json(newT);
-  }); 
+  .post(async (req: Request, res: Response) => {
+    const newTeacher = await tService.create(req.body);
+    res.status(201).json(newTeacher);
+  });
 
 router
   .route('/:id')
-  .get(async (req: Request, res:Response) => {
-    const id = Number(req.params.id)
-    const t = await tService.getById(req.params.id);
-    if(!t){
-      return res.status(404).json({message:'teacher not found'})
+  .get(async (req: Request<{id:string}>, res: Response) => {
+    const { id } = req.params;
+    const teacher = await tService.getById(id!);
+    if (!teacher) {
+      return res.status(404).json({ message: 'Teacher not found' });
     }
-    res.json(t);
-  }) 
-  .put(async (req: Request, res:Response) => {
-    const id = Number(req.params.id)
-    const updated = await tService.update(id, req.body);
-    res.json(updated);  
+    return res.json(teacher);
   })
-  .delete(async (req: Request, res:Response) => {
-    const id = Number(req.params.id)
-    const removed = await tService.remove(id);
-    res.json(removed);  
+  .put(async (req: Request<{id:string}>, res: Response) => {
+    const { id } = req.params;
+    const updated = await tService.update(id!, req.body);
+    if (!updated) {
+      return res.status(404).json({ message: 'Teacher not found' });
+    }
+    return res.json(updated);
+  })
+  .delete(async (req: Request<{id:string}>, res: Response) => {
+    const { id } = req.params;
+    const removed = await tService.remove(id!);
+    if (!removed) {
+      return res.status(404).json({ message: 'Teacher not found' });
+    }
+    return res.sendStatus(204);
   });
- 
-router.route('/:id/exams').get(async (req: Request, res:Response) => {
-  const id = Number(req.params.id)
-  const exams = await tService.getTeacherExams( id);
-  res.json(exams);  
+
+router.get('/:id/exams', async (req: Request<{id:string}>, res: Response) => {
+  const { id } = req.params;
+  const exams = await tService.getTeacherExams(id!);
+  res.json(exams);
 });
 
 export default router;

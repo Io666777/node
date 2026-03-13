@@ -1,8 +1,8 @@
-export interface Teacher{
-    id: number
+export interface Teacher {
+    id: string
     lastName:string
     firstName:string
-    degree: number
+    degree: string
 }
 
 export default Teacher

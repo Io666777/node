@@ -1,8 +1,8 @@
 import express, { Request, Response, NextFunction } from 'express';
 
-import abiRouter from './resources/abiturients/abiturient.router';
-import tRouter from './resources/teachers/teacher.router';
-import eRouter from './resources/exams/exam.router';
+import abiRouter from './resources/abiturients/abiturient.router.js';
+import tRouter from './resources/teachers/teacher.router.js';
+import eRouter from './resources/exams/exam.router.js';
 
 const app = express();
 

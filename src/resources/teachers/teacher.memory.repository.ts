@@ -1,31 +1,32 @@
-import Teacher from "./teacher.model";
+import { Teacher } from './teacher.model';
 
-const TEACHERS: Teacher[]=[];
+const TEACHERS: Teacher[] = [];
 
-const getAll = async ():Promise<Teacher[]> => TEACHERS;
+const getAll = async (): Promise<Teacher[]> => TEACHERS;
 
-const getById = async (id:number):Promise<Teacher | undefined> => TEACHERS.find((tch) => tch.id === id);
+const getById = async (id: string): Promise<Teacher | undefined> => 
+  TEACHERS.find((tch) => tch.id === id);
 
-const create = async (teacher:Teacher):Promise<Teacher> => {
+const create = async (teacher: Teacher): Promise<Teacher> => {
   TEACHERS.push(teacher);
   return teacher;
 };
 
-const update = async (id:number, data:Partial<Teacher>):Promise<Teacher| null> => {
-  const i = TEACHERS.findIndex((tch) => tch.id === id);
-  if (i !== -1) {
-    const uTch = { ...TEACHERS[i], ...data } as Teacher
-    TEACHERS[i]=uTch
-    return uTch
+const update = async (id: string, data: Partial<Teacher>): Promise<Teacher | null> => {
+  const index = TEACHERS.findIndex((tch) => tch.id === id);
+  if (index !== -1) {
+    const updatedTeacher = { ...TEACHERS[index], ...data } as Teacher;
+    TEACHERS[index] = updatedTeacher;
+    return updatedTeacher;
   }
   return null;
 };
 
-const remove = async (id:number):Promise<Teacher |null> => {
-  const i = TEACHERS.findIndex((tch) => tch.id === id);
-  if (i !== -1) {
-    const del = TEACHERS.splice(i, 1)[0];
-    return del || null
+const remove = async (id: string): Promise<Teacher | null> => {
+  const index = TEACHERS.findIndex((tch) => tch.id === id);
+  if (index !== -1) {
+    const deleted = TEACHERS.splice(index, 1)[0];
+    return deleted || null;
   }
   return null;
 };

@@ -1,31 +1,33 @@
-import Abiturient from "./abiturient.model"
+import { Abiturient } from './abiturient.model';
 
-const ABITURIENTS: Abiturient[]=[]
+const ABITURIENTS: Abiturient[] = [];
 
-const getAll=async ():Promise<Abiturient[]> =>ABITURIENTS
+const getAll = async (): Promise<Abiturient[]> => ABITURIENTS;
 
-const getById = async (id: number): Promise<Abiturient | undefined> => {
-  return ABITURIENTS.find((abi) => abi.id === id);
+const getById = async (id: string): Promise<Abiturient | undefined> => ABITURIENTS.find((abi) => abi.id === id);
+
+const create = async (abiturient: Abiturient): Promise<Abiturient> => {
+  ABITURIENTS.push(abiturient);
+  return abiturient;
 };
 
-const create = async (abiturient: Abiturient):Promise<Abiturient> =>{ABITURIENTS.push(abiturient);return abiturient}
-
-const update = async (id:number, data:Partial<Abiturient>):Promise<Abiturient | null> =>{
-  const i =ABITURIENTS.findIndex((abi)=> abi.id===id);
-  if(i!==-1){
-    const uAbi ={...ABITURIENTS[i],...data} as Abiturient;
-    ABITURIENTS[i] = uAbi;
-    return uAbi;
-  }
-  return null;
-}
-
-const remove = async (id:number) :Promise<Abiturient | null> =>{
-  const i = ABITURIENTS.findIndex((abi)=> abi.id===id);
-  if(i!==-1){
-    const del = ABITURIENTS.splice(i, 1)[0];
-    return del || null
+const update = async (id: string, data: Partial<Abiturient>): Promise<Abiturient | null> => {
+  const index = ABITURIENTS.findIndex((abi) => abi.id === id);
+  if (index !== -1) {
+    const updatedAbiturient = { ...ABITURIENTS[index], ...data } as Abiturient;
+    ABITURIENTS[index] = updatedAbiturient;
+    return updatedAbiturient;
   }
   return null;
 };
-export {getAll, getById, update, create, remove}
+
+const remove = async (id: string): Promise<Abiturient | null> => {
+  const index = ABITURIENTS.findIndex((abi) => abi.id === id);
+  if (index !== -1) {
+    const deleted = ABITURIENTS.splice(index, 1)[0];
+    return deleted || null;
+  }
+  return null;
+};
+
+export { getAll, getById, update, create, remove };
