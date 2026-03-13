@@ -1,5 +1,5 @@
-import * as teachersRepo from './teacher.memory.repository.ts';
-import * as examsService from '../exams/exam.service.ts';
+import * as teachersRepo from './teacher.memory.repository';
+import * as examsService from '../exams/exam.service';
 import { Teacher } from './teacher.model';
 import { Exam } from '../exams/exam.model';
 

@@ -1,14 +1,14 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 
-import abiRouter from './resources/abiturients/abiturient.router.js';
-import tRouter from './resources/teachers/teacher.router.js';
-import eRouter from './resources/exams/exam.router.js';
+import abiRouter from './resources/abiturients/abiturient.router';
+import tRouter from './resources/teachers/teacher.router';
+import eRouter from './resources/exams/exam.router';
 
 const app = express();
 
 app.use(express.json());
 
-app.use('/', (req: Request, res: Response, next: NextFunction) => {
+app.use('/', (req, res, next) => {
   if (req.originalUrl === '/') {
     res.send('Service is running!');
     return;
