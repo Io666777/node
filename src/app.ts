@@ -1,5 +1,6 @@
 import express from 'express';
 
+import errorHandler from'./common/middleware/error.logger'
 import abiRouter from './resources/abiturients/abiturient.router';
 import tRouter from './resources/teachers/teacher.router';
 import eRouter from './resources/exams/exam.router';
@@ -20,4 +21,5 @@ app.use('/abiturients', abiRouter);
 app.use('/teachers', tRouter);
 app.use('/exams', eRouter);
 
+app.use(errorHandler);
 export default app;
