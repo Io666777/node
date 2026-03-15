@@ -1,0 +1,51 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: docker/db.Dockerfile
+    restart: always  
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - pgdata:/var/lib/postgresql/data 
+    networks:
+      - dada
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/app.Dockerfile
+    restart: on-failure 
+    depends_on:
+      - db 
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    volumes:
+      - .:/usr/app
+      - /usr/app/node_modules
+      - logs_volume:/usr/app/src/logs 
+    networks:
+      - dada 
+
+  pgadmin:
+      image: dpage/pgadmin4
+      restart: always
+      environment:
+        PGADMIN_DEFAULT_EMAIL: dada@admin.com
+        PGADMIN_DEFAULT_PASSWORD: dada
+      ports:
+        - "5050:80"
+      networks:
+        - dada
+
+networks:
+  dada:
+    driver: bridge 
+
+volumes:
+  pgdata:
+  logs_volume:

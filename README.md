@@ -41,3 +41,12 @@ npm run lint
 Press <kbd>F5</kbd> to debug.
 
 For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+
+
+docker-compose up --build ---собиарет образ
+
+docker-compose up -d --- запуск в фоне
+
+docker-compose stop --- остановка контейнера
+
+docker-compose down --- остановка + удаленик
