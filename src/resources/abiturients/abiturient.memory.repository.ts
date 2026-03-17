@@ -1,33 +1,25 @@
-import { Abiturient } from './abiturient.model';
+import { Abiturient, Prisma } from '@prisma/client';
+import prisma from '../../prisma';
+ 
+const findAll = async (): Promise<Abiturient[]> => 
+  await prisma.abiturient.findMany();
 
-const ABITURIENTS: Abiturient[] = [];
+const findById = async (id: string): Promise<Abiturient | null> => 
+  await prisma.abiturient.findUnique({ where: { id } });
 
-const getAll = async (): Promise<Abiturient[]> => ABITURIENTS;
+const create = async (data: Prisma.AbiturientCreateInput): Promise<Abiturient> => 
+  await prisma.abiturient.create({ data });
 
-const getById = async (id: string): Promise<Abiturient | undefined> => ABITURIENTS.find((abi) => abi.id === id);
+const update = async (id: string, data: Prisma.AbiturientUpdateInput): Promise<Abiturient> => 
+  await prisma.abiturient.update({ where: { id }, data });
 
-const create = async (abiturient: Abiturient): Promise<Abiturient> => {
-  ABITURIENTS.push(abiturient);
-  return abiturient;
-};
+const remove = async (id: string): Promise<Abiturient> => 
+  await prisma.abiturient.delete({ where: { id } });
+ 
+const findWithExams = async (id: string) => 
+  await prisma.abiturient.findUnique({
+    where: { id },
+    include: { exams: true }
+  });
 
-const update = async (id: string, data: Partial<Abiturient>): Promise<Abiturient | null> => {
-  const index = ABITURIENTS.findIndex((abi) => abi.id === id);
-  if (index !== -1) {
-    const updatedAbiturient = { ...ABITURIENTS[index], ...data } as Abiturient;
-    ABITURIENTS[index] = updatedAbiturient;
-    return updatedAbiturient;
-  }
-  return null;
-};
-
-const remove = async (id: string): Promise<Abiturient | null> => {
-  const index = ABITURIENTS.findIndex((abi) => abi.id === id);
-  if (index !== -1) {
-    const deleted = ABITURIENTS.splice(index, 1)[0];
-    return deleted || null;
-  }
-  return null;
-};
-
-export { getAll, getById, update, create, remove };
+export default { findAll, findById, create, update, remove, findWithExams };

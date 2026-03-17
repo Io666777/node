@@ -1,26 +1,43 @@
-import * as abiturientsRepo from './abiturient.memory.repository';
-import * as examsService from '../exams/exam.service';
-import { Abiturient } from './abiturient.model';
-import { Exam } from '../exams/exam.model';
+import { Abiturient, Exam } from '@prisma/client';
+import prisma from '../../prisma';
 
-const getAll = (): Promise<Abiturient[]> => abiturientsRepo.getAll();
+const getAll = async (): Promise<Abiturient[]> => 
+  await prisma.abiturient.findMany();
 
-const getById = (id: string): Promise<Abiturient | undefined> => abiturientsRepo.getById(id);
+const getById = async (id: string): Promise<Abiturient | null> => 
+  await prisma.abiturient.findUnique({ where: { id } });
 
-const create = (abi: Abiturient): Promise<Abiturient> => abiturientsRepo.create(abi);
+const create = async (data: any): Promise<Abiturient> => 
+  await prisma.abiturient.create({ 
+    data: {
+      ...data,
+      numCertificate: Number(data.numCertificate)  
+    } 
+  });
 
-const update = (id: string, data: Partial<Abiturient>): Promise<Abiturient | null> => 
-  abiturientsRepo.update(id, data);
+const update = async (id: string, data: any): Promise<Abiturient> => 
+  await prisma.abiturient.update({
+    where: { id },
+    data: {
+      ...data,
+      ...(data.numCertificate && { numCertificate: Number(data.numCertificate) })
+    },
+  });
 
 const remove = async (id: string): Promise<Abiturient | null> => {
-  const delAbi = await abiturientsRepo.remove(id);
-  if (delAbi) {
-       await examsService.removeAbiturient(id);
+  try {
+    return await prisma.abiturient.delete({ where: { id } });
+  } catch {
+    return null;
   }
-  return delAbi;
 };
 
-const getAbiturientExams = (id: string): Promise<Exam[]> => 
-  examsService.getByAbiturientId(id);
+const getAbiturientExams = async (abiturientId: string): Promise<Exam[]> => {
+  const result = await prisma.abiturient.findUnique({
+    where: { id: abiturientId },
+    include: { exams: true },
+  });
+  return result?.exams || [];
+};
 
-export { getAll, getById, create, update, remove, getAbiturientExams };
+export default { getAll, getById, create, update, remove, getAbiturientExams };

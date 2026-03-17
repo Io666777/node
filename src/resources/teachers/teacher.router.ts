@@ -1,17 +1,14 @@
 import { Router } from 'express';
-import teacherController from './teacher.controller';
+import tController from './teacher.controller';
 
 const router = Router();
+router.get('/', tController.getAll);
+router.post('/', tController.create);
 
-router.route('/')
-  .get(teacherController.getAll)
-  .post(teacherController.create);
+router.get('/:id', tController.getById);
+router.patch('/:id', tController.update);
+router.delete('/:id', tController.remove);
 
-router.route('/:id')
-  .get(teacherController.getById)
-  .put(teacherController.update)
-  .delete(teacherController.remove);
-
-router.get('/:id/exams', teacherController.getTeacherExams);
+router.get('/:id/exams', tController.getExams);
 
 export default router;

@@ -50,3 +50,7 @@ docker-compose up -d --- запуск в фоне
 docker-compose stop --- остановка контейнера
 
 docker-compose down --- остановка + удаленик
+
+////
+
+npx prisma migrate dev ---миграции

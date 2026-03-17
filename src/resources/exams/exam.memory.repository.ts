@@ -1,58 +1,55 @@
-import { Exam } from './exam.model';
+import { Exam } from '@prisma/client';
+import prisma from '../../prisma';
 
-const EXAMS: Exam[] = [];
+const findAll = async (): Promise<Exam[]> => 
+  await prisma.exam.findMany({
+    include: { teacher: true, abiturient: true }
+  });
 
-const getAll = async (): Promise<Exam[]> => EXAMS;
+const findById = async (id: string): Promise<Exam | null> => 
+  await prisma.exam.findUnique({ 
+    where: { id },
+    include: { teacher: true, abiturient: true }
+  });
 
-const getById = async (id: string): Promise<Exam | undefined> => 
-  EXAMS.find((exam) => exam.id === id);
+const create = async (data: any): Promise<Exam> => {
+  // Собираем объект вручную
+  const createData = {
+    subject: data.subject,
+    score: Number(data.score),
+    date: new Date(data.date),
+    teacherId: data.teacherId,
+    abiturientId: data.abiturientId
+  };
 
-const create = async (exam: Exam): Promise<Exam> => {
-  EXAMS.push(exam);
-  return exam;
+  // КОСТЫЛЬ: приводим к any, чтобы TS не сравнивал типы дат и строк
+  return await prisma.exam.create({
+    data: createData as any
+  });
 };
 
-const update = async (id: string, data: Partial<Exam>): Promise<Exam | null> => {
-  const index = EXAMS.findIndex((exam) => exam.id === id);
-  if (index !== -1) {
-    const updated = { ...EXAMS[index], ...data } as Exam;
-    EXAMS[index] = updated;
-    return updated;
-  }
-  return null;
+const update = async (id: string, data: any): Promise<Exam> => {
+  const updateData: any = {};
+
+  if (data.subject) updateData.subject = data.subject;
+  if (data.score) updateData.score = Number(data.score);
+  if (data.date) updateData.date = new Date(data.date);
+  if (data.teacherId) updateData.teacherId = data.teacherId;
+  if (data.abiturientId) updateData.abiturientId = data.abiturientId;
+
+  // КОСТЫЛЬ: снова используем as any
+  return await prisma.exam.update({
+    where: { id },
+    data: updateData as any
+  });
 };
 
 const remove = async (id: string): Promise<Exam | null> => {
-  const index = EXAMS.findIndex((exam) => exam.id === id);
-  if (index !== -1) {
-    return EXAMS.splice(index, 1)[0] || null;
+  try {
+    return await prisma.exam.delete({ where: { id } });
+  } catch {
+    return null;
   }
-  return null;
 };
 
-const getByTeacherId = async (id: string): Promise<Exam[]> => 
-  EXAMS.filter((exam) => exam.teacherId === id);
-
-const getByAbiturientId = async (id: string): Promise<Exam[]> => 
-  EXAMS.filter((exam) => exam.abiturientId === id);
-
-const removeTeacher = async (teacherId: string): Promise<void> => {
-  EXAMS.forEach((exam, index) => {
-    if (exam.teacherId === teacherId) {
-      EXAMS[index] = { ...exam, teacherId: null };
-    }
-  });
-};
-
-const removeAbiturient = async (abiturientId: string): Promise<void> => {
-  EXAMS.forEach((exam, index) => {
-    if (exam.abiturientId === abiturientId) {
-      EXAMS[index] = { ...exam, abiturientId: null };
-    }
-  });
-};
-
-export { 
-  getAll, getById, create, update, remove, 
-  getByTeacherId, getByAbiturientId, removeTeacher, removeAbiturient 
-};
+export default { findAll, findById, create, update, remove };
