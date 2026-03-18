@@ -1,41 +1,48 @@
 import { Request, Response } from 'express';
-import * as tService from './teacher.service';
+import tService from './teacher.service';
 
-const getAll = async (_req: Request, res: Response) => {
+const getAll = async (_req: Request, res: Response): Promise<void> => {
   const teachers = await tService.getAll();
-  return res.json(teachers); // Если в модели есть toResponse, используй его здесь
+  res.json(teachers);
 };
 
-const getById = async (req: Request<{ id: string }>, res: Response) => {
-  const { id } = req.params;
+const getById = async (req: Request, res: Response): Promise<void> => {
+  const id = req.params.id as string; 
   const teacher = await tService.getById(id);
-  if (!teacher) return res.status(404).json({ message: 'Teacher not found' });
-  return res.json(teacher);
+
+  if (!teacher) {
+    res.status(404).send('Teacher not found');
+    return; 
+  }
+  res.json(teacher);
 };
 
-const create = async (req: Request, res: Response) => {
+const create = async (req: Request, res: Response): Promise<void> => {
   const newTeacher = await tService.create(req.body);
-  return res.status(201).json(newTeacher);
+  res.status(201).json(newTeacher);
 };
 
-const update = async (req: Request<{ id: string }>, res: Response) => {
-  const { id } = req.params;
+const update = async (req: Request, res: Response): Promise<void> => {
+  const id = req.params.id as string;
   const updated = await tService.update(id, req.body);
-  if (!updated) return res.status(404).json({ message: 'Teacher not found' });
-  return res.json(updated);
+  res.json(updated);
 };
 
-const remove = async (req: Request<{ id: string }>, res: Response) => {
-  const { id } = req.params;
-  const removed = await tService.remove(id);
-  if (!removed) return res.status(404).json({ message: 'Teacher not found' });
-  return res.sendStatus(204);
+const remove = async (req: Request, res: Response): Promise<void> => {
+  const id = req.params.id as string;
+  const result = await tService.remove(id);
+
+  if (!result) {
+    res.status(404).send('Teacher not found');
+    return;
+  }
+  res.sendStatus(204);
 };
 
-const getTeacherExams = async (req: Request<{ id: string }>, res: Response) => {
-  const { id } = req.params;
+const getExams = async (req: Request, res: Response): Promise<void> => {
+  const id = req.params.id as string;
   const exams = await tService.getTeacherExams(id);
-  return res.json(exams);
+  res.json(exams);
 };
 
-export default { getAll, getById, create, update, remove, getTeacherExams };
+export default { getAll, getById, create, update, remove, getExams };

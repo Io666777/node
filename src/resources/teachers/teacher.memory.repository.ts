@@ -1,34 +1,28 @@
-import { Teacher } from './teacher.model';
+import {Teacher} from '@prisma/client'
+import prisma from '../../prisma'
 
-const TEACHERS: Teacher[] = [];
+const getAll = async (): Promise<Teacher[]> => 
+  await prisma.teacher.findMany();
 
-const getAll = async (): Promise<Teacher[]> => TEACHERS;
+const getById = async (id: string): Promise<Teacher | null> => 
+  await prisma.teacher.findUnique({ where: { id } });
 
-const getById = async (id: string): Promise<Teacher | undefined> => 
-  TEACHERS.find((tch) => tch.id === id);
 
-const create = async (teacher: Teacher): Promise<Teacher> => {
-  TEACHERS.push(teacher);
-  return teacher;
-};
+const create = async (teacher: Teacher): Promise<Teacher> => 
+  await prisma.teacher.create({ data: teacher });
 
-const update = async (id: string, data: Partial<Teacher>): Promise<Teacher | null> => {
-  const index = TEACHERS.findIndex((tch) => tch.id === id);
-  if (index !== -1) {
-    const updatedTeacher = { ...TEACHERS[index], ...data } as Teacher;
-    TEACHERS[index] = updatedTeacher;
-    return updatedTeacher;
-  }
-  return null;
-};
+const update = async (id: string, data: Partial<Teacher>): Promise<Teacher> => 
+  await prisma.teacher.update({
+    where: { id },
+    data,
+  });
 
 const remove = async (id: string): Promise<Teacher | null> => {
-  const index = TEACHERS.findIndex((tch) => tch.id === id);
-  if (index !== -1) {
-    const deleted = TEACHERS.splice(index, 1)[0];
-    return deleted || null;
+  try {
+    return await prisma.teacher.delete({ where: { id } });
+  } catch {
+    return null;
   }
-  return null;
 };
 
-export { getAll, getById, create, update, remove };
+export default { getAll, getById, create, update, remove };

@@ -1,26 +1,35 @@
-import * as teachersRepo from './teacher.memory.repository';
-import * as examsService from '../exams/exam.service';
-import { Teacher } from './teacher.model';
-import { Exam } from '../exams/exam.model';
+import { Teacher, Exam } from '@prisma/client';
+import prisma from '../../prisma';
 
-const getAll = (): Promise<Teacher[]> => teachersRepo.getAll();
+const getAll = async (): Promise<Teacher[]> => 
+  await prisma.teacher.findMany();
 
-const getById = (id: string): Promise<Teacher | undefined> => teachersRepo.getById(id);
+const getById = async (id: string): Promise<Teacher | null> => 
+  await prisma.teacher.findUnique({ where: { id } });
 
-const create = (teacher: Teacher): Promise<Teacher> => teachersRepo.create(teacher);
+const create = async (teacher: Teacher): Promise<Teacher> => 
+  await prisma.teacher.create({ data: teacher });
 
-const update = (id: string, data: Partial<Teacher>): Promise<Teacher | null> => 
-  teachersRepo.update(id, data);
+const update = async (id: string, data: Partial<Teacher>): Promise<Teacher> => 
+  await prisma.teacher.update({
+    where: { id },
+    data,
+  });
 
 const remove = async (id: string): Promise<Teacher | null> => {
-  const deletedTeacher = await teachersRepo.remove(id);
-  if (deletedTeacher) {
-    await examsService.removeTeacher(id);
+  try {
+    return await prisma.teacher.delete({ where: { id } });
+  } catch {
+    return null;
   }
-  return deletedTeacher;
 };
 
-const getTeacherExams = async (id: string): Promise<Exam[]> => 
-  examsService.getByTeacherId(id);
+const getTeacherExams = async (teacherId: string): Promise<Exam[]> => {
+  const teacherWithExams = await prisma.teacher.findUnique({
+    where: { id: teacherId },
+    include: { exams: true },
+  });
+  return teacherWithExams?.exams || [];
+};
 
-export { getAll, getById, create, update, remove, getTeacherExams };
+export default{ getAll, getById, create, update, remove, getTeacherExams };

@@ -3,13 +3,10 @@ import examController from './exam.controller';
 
 const router = Router();
 
-router.route('/')
-  .get(examController.getAll)
-  .post(examController.create);
-
-router.route('/:id')
-  .get(examController.getById)
-  .put(examController.update)
-  .delete(examController.remove);
+router.get('/', examController.getAll);
+router.post('/', examController.create);
+router.get('/:id', examController.getById);
+router.patch('/:id', examController.update);
+router.delete('/:id', examController.remove);
 
 export default router;
