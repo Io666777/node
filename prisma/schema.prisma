@@ -39,3 +39,12 @@ model Teacher {
   degree    String
   exams     Exam[]
 }
+
+model Admin {
+  id       String @id @default(uuid())
+  name     String
+  login    String @unique
+  password String
+
+  @@map("admin")
+}

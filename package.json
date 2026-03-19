@@ -42,16 +42,20 @@
   "dependencies": {
     "@prisma/adapter-pg": "^7.5.0",
     "@prisma/client": "^7.5.0",
+    "bcrypt": "^6.0.0",
     "cross-env": "^7.0.3",
     "dotenv": "^9.0.2",
     "express": "^4.22.1",
+    "jsonwebtoken": "^9.0.3",
     "morgan": "^1.10.1",
     "pg": "^8.20.0",
     "uuid": "^8.3.2",
     "winston": "^3.19.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.3.0",
     "@types/pg": "^8.18.0",
@@ -70,6 +74,7 @@
     "prettier": "^2.2.1",
     "prisma": "^7.5.0",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }
 }
