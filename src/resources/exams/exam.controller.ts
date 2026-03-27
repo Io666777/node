@@ -18,14 +18,28 @@ const getById = async (req: Request, res: Response): Promise<void> => {
 };
 
 const create = async (req: Request, res: Response): Promise<void> => {
-  const newExam = await examRepo.create(req.body);
-  res.status(201).json(newExam);
+  try {
+    const newExam = await examRepo.create(req.body);
+    res.status(201).json(newExam);
+    return;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : 'Unable to create exam';
+    res.status(400).json({ message });
+    return;
+  }
 };
 
 const update = async (req: Request, res: Response): Promise<void> => {
-  const id = req.params.id as string;
-  const updated = await examRepo.update(id, req.body);
-  res.json(updated);
+  try {
+    const id = req.params.id as string;
+    const updated = await examRepo.update(id, req.body);
+    res.json(updated);
+    return;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : 'Unable to update exam';
+    res.status(400).json({ message });
+    return;
+  }
 };
 
 const remove = async (req: Request, res: Response): Promise<void> => {

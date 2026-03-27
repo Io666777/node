@@ -30,6 +30,19 @@ CREATE TABLE "Teacher" (
     CONSTRAINT "Teacher_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "admin" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "login" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+
+    CONSTRAINT "admin_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateIndex
+CREATE UNIQUE INDEX "admin_login_key" ON "admin"("login");
+
 -- AddForeignKey
 ALTER TABLE "Exam" ADD CONSTRAINT "Exam_abiturientId_fkey" FOREIGN KEY ("abiturientId") REFERENCES "Abiturient"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 

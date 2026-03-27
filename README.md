@@ -51,9 +51,13 @@ docker-compose stop --- остановка контейнера
 
 docker-compose down --- остановка + удаленик
 
+docker-compose restart app --- рестарт контейнеров
+
 ## призма команды
 
 npx prisma migrate dev ---миграции
+
+docker-compose exec app npx prisma db seed --- перерендер
 
 ## порядок команд
 # 1. Установить зависимости и сгенерировать типы Prisma
@@ -68,3 +72,15 @@ docker-compose exec app npx prisma migrate dev --name init эт2
 
 ###### для демонстрации
 npx prisma studio
+
+
+
+######
+Поднять сервисы:
+  docker-compose up -d --build
+Применить миграции:
+  docker-compose exec app npx prisma migrate deploy
+Заполнить БД (создаст admin + хеш пароля bcrypt):
+  docker-compose exec app npx prisma db seed
+Проверить логи, что сервер стартовал:
+  docker-compose logs -f app
